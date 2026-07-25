@@ -1,0 +1,283 @@
+# PHASE 6/9 – HEALTHWAVE OS – PUBLISHING ENGINE + SOCIAL MEDIA HUB (PART 2)
+
+Continue from Phase 6 Part 1. Inspect existing code before making changes. Extend current architecture without replacing working functionality. Maintain reusable, scalable, production-ready code.
+
+## Social Media Command Center
+
+Create a centralized publishing command center displaying:
+
+- Live publishing queue
+- Upcoming scheduled posts
+- Failed posts
+- Drafts awaiting approval
+- Platform connection health
+- Recent publishing activity
+- Quick publish actions
+- AI publishing recommendations
+
+## Platform Connection Manager
+
+Create reusable connection architecture.
+
+Each platform should support:
+
+- Connected/Disconnected
+- Profile information
+- Multiple accounts (future)
+- Token expiration placeholder
+- Permission status
+- Last sync
+- Reconnect
+- Disconnect
+- Refresh connection
+
+Store connection metadata securely.
+
+## Publishing Rules
+
+Allow configurable rules:
+
+- Approval required
+- Compliance review required
+- Platform-specific approval
+- Quiet hours
+- Maximum daily posts
+- Duplicate prevention
+- Required hashtags
+- Required CTA
+- Required media
+
+Allow custom rules later.
+
+## AI Publishing Assistant
+
+Create UI only.
+
+Future capabilities:
+
+- Best posting time
+- Suggested platforms
+- Caption optimization
+- Hashtag recommendations
+- Audience recommendations
+- Publishing warnings
+- Content scoring
+
+Do not implement AI logic yet.
+
+## Queue Management
+
+Support:
+
+- Drag-and-drop priority
+- Pause queue
+- Resume queue
+- Retry failed posts
+- Cancel scheduled posts
+- Duplicate scheduled posts
+- Edit scheduled posts
+- Queue filtering
+
+## Platform Groups
+
+Allow reusable groups such as:
+
+- All Platforms
+- Professional
+- Video
+- Local Marketing
+- Recruitment
+- Mental Health
+- Dental
+- Plastic Surgery
+- Vision
+- User-defined groups
+
+Publishing to a group should schedule all associated platforms.
+
+## Media Attachments
+
+Support:
+
+- Images
+- Videos
+- PDFs
+- Documents
+- GIFs
+
+Display:
+
+Thumbnail
+
+File size
+
+Dimensions
+
+Alt text
+
+Media status
+
+Future:
+
+Platform optimization
+
+Automatic resizing
+
+Format conversion
+
+## Content Validation
+
+Before scheduling, display warnings for:
+
+- Character limits
+- Missing media
+- Missing CTA
+- Missing hashtags
+- Missing approvals
+- Missing compliance review
+- Platform restrictions
+
+Warnings should educate, not block unnecessarily.
+
+## Publishing Timeline
+
+Create a timeline view showing:
+
+Draft Created
+
+Reviewed
+
+Approved
+
+Scheduled
+
+Publishing
+
+Published
+
+Failed
+
+Archived
+
+Display timestamps and responsible user.
+
+## Scheduling Intelligence
+
+Prepare architecture for:
+
+- Best posting times
+- Audience activity
+- Time zone optimization
+- Holiday awareness
+- Healthcare awareness months
+- Platform recommendations
+
+No AI implementation yet.
+
+## Error Recovery
+
+Create recovery workflows for:
+
+- Platform unavailable
+- Expired connection
+- Failed upload
+- Publishing timeout
+- Validation failure
+- Missing permissions
+
+Offer clear recovery actions.
+
+## Publishing Analytics Preparation
+
+Store placeholders for:
+
+- Reach
+- Engagement
+- Impressions
+- Clicks
+- Shares
+- Saves
+- Comments
+- Conversions
+- Cost per result
+- ROI
+
+Future data will populate these values.
+
+## Notification Integration
+
+Generate notifications for:
+
+- Successful publishing
+- Failed publishing
+- Approval requests
+- Connection issues
+- Queue completion
+- Scheduled reminders
+- Compliance reminders
+
+Integrate with Notification Center from Phase 4.
+
+## Security
+
+Protect:
+
+- API credentials
+- Platform tokens
+- Publishing permissions
+- User roles
+
+Use encrypted storage and environment variables.
+
+## Database Preparation
+
+Extend existing schema for:
+
+- Publishing jobs
+- Scheduled posts
+- Queue items
+- Platform connections
+- Publishing history
+- Approval history
+- Notification events
+
+Do not duplicate existing models.
+
+## Documentation
+
+Update documentation describing:
+
+- Publishing architecture
+- Queue management
+- Scheduler
+- Platform abstraction
+- Connection manager
+- Extension points for future APIs
+
+## Final Validation
+
+Verify:
+
+- Existing phases still function
+- Dashboard remains intact
+- Content Studio integrates correctly
+- Scheduler works
+- Calendar works
+- Navigation works
+- Responsive layouts
+- No TypeScript errors
+- No lint errors
+- No duplicate components
+
+Do NOT implement yet:
+
+- Live platform APIs
+- Actual posting to social networks
+- AI scheduling engine
+- Trend engine
+- Medical fact-checking
+- Compliance automation
+
+Build clean extension points for Phase 7.
+
+Summarize Phase 6 completion and wait for Phase 7.

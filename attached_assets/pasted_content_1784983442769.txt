@@ -1,0 +1,354 @@
+# PHASE 6/9 – HEALTHWAVE OS – PUBLISHING ENGINE + SOCIAL MEDIA HUB (PART 1)
+
+Continue from Phase 5. Inspect the existing codebase first. Never replace working functionality. Extend the architecture using reusable, scalable components.
+
+## Objective
+Build the complete Publishing Engine and Social Media Hub. This is the command center for scheduling, organizing, approving, and distributing content across every supported platform.
+
+Do NOT build direct API integrations yet unless placeholders already exist. Build the publishing architecture first.
+
+Supported platforms:
+- Facebook
+- Instagram
+- LinkedIn
+- TikTok
+- YouTube
+- Google Business Profile
+- Pinterest
+- X
+- Threads
+- Snapchat
+- Reddit
+- Tumblr
+- Medium
+- WordPress
+- Discord
+- Telegram
+
+Architecture must allow unlimited future platforms.
+
+## Publishing Dashboard
+
+Create dashboard sections:
+
+Today's Posts
+
+Scheduled Queue
+
+Draft Queue
+
+Publishing Calendar
+
+Approval Queue
+
+Platform Status
+
+Publishing History
+
+Connection Status
+
+Failed Posts
+
+Recent Activity
+
+AI Recommendations
+
+Quick Publish
+
+## Connected Platforms
+
+Display:
+
+Platform
+
+Connection status
+
+Profile
+
+Permissions
+
+Last sync
+
+Posting capabilities
+
+Reconnect
+
+Disconnect
+
+Future:
+
+Multiple accounts per platform
+
+Multiple businesses
+
+## Publishing Queue
+
+Display:
+
+Queued posts
+
+Publishing order
+
+Scheduled time
+
+Platform
+
+Campaign
+
+Approval status
+
+Priority
+
+Support:
+
+Pause
+
+Resume
+
+Reorder
+
+Duplicate
+
+Cancel
+
+Edit
+
+## Publishing Workflow
+
+Draft
+
+Internal Review
+
+Compliance Review
+
+Approved
+
+Scheduled
+
+Publishing
+
+Published
+
+Failed
+
+Archived
+
+Allow custom workflow rules.
+
+## Multi-Platform Publishing
+
+Allow users to:
+
+Select one platform
+
+Multiple platforms
+
+Entire platform groups
+
+Create reusable publishing groups.
+
+Example:
+
+All Social
+
+Professional
+
+Video
+
+Local Marketing
+
+Recruitment
+
+## Platform Customization
+
+Each platform supports:
+
+Character count
+
+Image limits
+
+Video limits
+
+Hashtag rules
+
+Mention rules
+
+Link preview
+
+CTA customization
+
+Platform-specific formatting
+
+## Platform Preview
+
+Create accurate previews for every supported platform.
+
+Display:
+
+Profile
+
+Image placement
+
+Caption
+
+Hashtags
+
+CTA
+
+Comments preview
+
+Mobile appearance
+
+Desktop appearance
+
+## Scheduler
+
+Support:
+
+Date
+
+Time
+
+Timezone
+
+Recurring schedule
+
+Custom recurrence
+
+Best time placeholder
+
+Approval reminders
+
+Publishing reminders
+
+## Recurring Content
+
+Support:
+
+Daily
+
+Weekly
+
+Biweekly
+
+Monthly
+
+Quarterly
+
+Yearly
+
+Custom intervals
+
+Future:
+
+AI schedule optimization.
+
+## Calendar
+
+Views:
+
+Day
+
+Week
+
+Month
+
+Agenda
+
+Campaign
+
+Platform
+
+Drag-and-drop architecture.
+
+## Campaign Publishing
+
+Associate posts with campaigns.
+
+Track:
+
+Campaign
+
+Platform
+
+Status
+
+Goal
+
+Schedule
+
+Performance placeholder
+
+## Approval Queue
+
+Display:
+
+Pending approvals
+
+Reviewer
+
+Deadline
+
+Status
+
+Comments
+
+Approval history
+
+## Bulk Actions
+
+Support:
+
+Bulk publish
+
+Bulk schedule
+
+Bulk delete
+
+Bulk move
+
+Bulk duplicate
+
+Bulk edit
+
+Bulk approve
+
+## Publishing History
+
+Store:
+
+Date
+
+Platform
+
+Content
+
+Status
+
+Campaign
+
+Errors
+
+User
+
+Future analytics connection.
+
+## Validation
+
+Verify:
+
+Previous phases remain functional
+
+Dashboard intact
+
+Navigation intact
+
+No TypeScript errors
+
+No lint errors
+
+Responsive layouts
+
+Reusable architecture
+
+STOP after Part 1 and wait for Part 2.
