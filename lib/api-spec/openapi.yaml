@@ -1,6 +1,5 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
   description: API specification
@@ -10,6 +9,22 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Dashboard summaries
+  - name: content
+    description: Content items
+  - name: publishing
+    description: Publishing queue and scheduling
+  - name: platforms
+    description: Connected platform accounts
+  - name: campaigns
+    description: Campaigns
+  - name: approvals
+    description: Approval workflow
+  - name: history
+    description: Publishing history
+  - name: notifications
+    description: Notifications
 paths:
   /healthz:
     get:
@@ -24,6 +39,467 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Dashboard summary
+      description: Aggregated publishing dashboard metrics
+      responses:
+        "200":
+          description: Summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Recent activity feed
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Activity list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivityFeed"
+
+  /content:
+    get:
+      operationId: listContent
+      tags: [content]
+      summary: List content items
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: platform
+          in: query
+          schema:
+            type: string
+        - name: campaign
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Content list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentList"
+    post:
+      operationId: createContent
+      tags: [content]
+      summary: Create content item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentItem"
+
+  /content/{id}:
+    get:
+      operationId: getContent
+      tags: [content]
+      summary: Get content item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Content item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentItem"
+    patch:
+      operationId: updateContent
+      tags: [content]
+      summary: Update content item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentItem"
+    delete:
+      operationId: deleteContent
+      tags: [content]
+      summary: Delete content item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /publishing/queue:
+    get:
+      operationId: getPublishingQueue
+      tags: [publishing]
+      summary: Get publishing queue
+      responses:
+        "200":
+          description: Queue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishingQueue"
+
+  /publishing/queue/{id}/reorder:
+    patch:
+      operationId: reorderQueueItem
+      tags: [publishing]
+      summary: Reorder a queue item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueReorderInput"
+      responses:
+        "200":
+          description: Reordered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueItem"
+
+  /publishing/queue/{id}/pause:
+    post:
+      operationId: pauseQueueItem
+      tags: [publishing]
+      summary: Pause a queue item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paused
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueItem"
+
+  /publishing/queue/{id}/resume:
+    post:
+      operationId: resumeQueueItem
+      tags: [publishing]
+      summary: Resume a queue item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Resumed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueItem"
+
+  /publishing/schedule:
+    get:
+      operationId: getScheduledPosts
+      tags: [publishing]
+      summary: Get scheduled posts
+      parameters:
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Scheduled posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduledPostList"
+
+  /publishing/schedule/{id}:
+    patch:
+      operationId: updateScheduledPost
+      tags: [publishing]
+      summary: Update scheduled post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduledPostUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScheduledPost"
+    delete:
+      operationId: cancelScheduledPost
+      tags: [publishing]
+      summary: Cancel scheduled post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Cancelled
+
+  /platforms:
+    get:
+      operationId: listPlatforms
+      tags: [platforms]
+      summary: List connected platforms
+      responses:
+        "200":
+          description: Platform list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformList"
+    post:
+      operationId: connectPlatform
+      tags: [platforms]
+      summary: Connect a platform
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlatformConnectionInput"
+      responses:
+        "201":
+          description: Connected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformConnection"
+
+  /platforms/{id}:
+    get:
+      operationId: getPlatform
+      tags: [platforms]
+      summary: Get platform connection
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Platform connection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformConnection"
+    delete:
+      operationId: disconnectPlatform
+      tags: [platforms]
+      summary: Disconnect platform
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Disconnected
+
+  /platforms/{id}/reconnect:
+    post:
+      operationId: reconnectPlatform
+      tags: [platforms]
+      summary: Reconnect platform
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Reconnected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformConnection"
+
+  /campaigns:
+    get:
+      operationId: listCampaigns
+      tags: [campaigns]
+      summary: List campaigns
+      responses:
+        "200":
+          description: Campaign list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignList"
+
+  /approvals:
+    get:
+      operationId: listApprovals
+      tags: [approvals]
+      summary: List approval requests
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Approval list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApprovalList"
+
+  /approvals/{id}/approve:
+    post:
+      operationId: approveContent
+      tags: [approvals]
+      summary: Approve content
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApprovalActionInput"
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApprovalRecord"
+
+  /history:
+    get:
+      operationId: getPublishingHistory
+      tags: [history]
+      summary: Get publishing history
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: History
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublishingHistoryList"
+
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List notifications
+      parameters:
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationList"
+    patch:
+      operationId: markNotificationsRead
+      tags: [notifications]
+      summary: Mark notifications as read
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationReadInput"
+      responses:
+        "200":
+          description: Updated
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +510,582 @@ components:
       required:
         - status
 
+    DashboardSummary:
+      type: object
+      properties:
+        todayPosts:
+          type: integer
+        scheduledToday:
+          type: integer
+        pendingApprovals:
+          type: integer
+        failedPosts:
+          type: integer
+        connectedPlatforms:
+          type: integer
+        totalPlatforms:
+          type: integer
+        queueSize:
+          type: integer
+        draftCount:
+          type: integer
+      required:
+        - todayPosts
+        - scheduledToday
+        - pendingApprovals
+        - failedPosts
+        - connectedPlatforms
+        - totalPlatforms
+        - queueSize
+        - draftCount
+
+    ActivityFeed:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityEvent"
+      required:
+        - items
+
+    ActivityEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+        user:
+          type: string
+        severity:
+          type: string
+      required:
+        - id
+        - type
+        - title
+        - timestamp
+
+    ContentList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContentItem"
+      required:
+        - items
+
+    ContentItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        type:
+          type: string
+        specialty:
+          type: string
+        category:
+          type: string
+        platform:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        campaign:
+          type: ["string", "null"]
+        brandVoice:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        scheduledFor:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - title
+        - body
+        - type
+        - specialty
+        - category
+        - platform
+        - status
+        - tags
+        - createdAt
+        - updatedAt
+
+    ContentInput:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        type:
+          type: string
+        specialty:
+          type: string
+        category:
+          type: string
+        platform:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        campaign:
+          type: ["string", "null"]
+        brandVoice:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        scheduledFor:
+          type: ["string", "null"]
+      required:
+        - title
+        - body
+        - type
+        - specialty
+        - category
+        - platform
+        - status
+
+    ContentUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        type:
+          type: string
+        specialty:
+          type: string
+        category:
+          type: string
+        platform:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        campaign:
+          type: ["string", "null"]
+        brandVoice:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        scheduledFor:
+          type: ["string", "null"]
+
+    PublishingQueue:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/QueueItem"
+        paused:
+          type: boolean
+      required:
+        - items
+        - paused
+
+    QueueItem:
+      type: object
+      properties:
+        id:
+          type: string
+        contentId:
+          type: string
+        title:
+          type: string
+        platform:
+          type: string
+        scheduledFor:
+          type: string
+        status:
+          type: string
+        priority:
+          type: integer
+        order:
+          type: integer
+        campaign:
+          type: ["string", "null"]
+        approvalStatus:
+          type: string
+      required:
+        - id
+        - contentId
+        - title
+        - platform
+        - scheduledFor
+        - status
+        - priority
+        - order
+        - approvalStatus
+
+    QueueReorderInput:
+      type: object
+      properties:
+        order:
+          type: integer
+      required:
+        - order
+
+    ScheduledPostList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScheduledPost"
+      required:
+        - items
+
+    ScheduledPost:
+      type: object
+      properties:
+        id:
+          type: string
+        contentId:
+          type: string
+        title:
+          type: string
+        platform:
+          type: string
+        scheduledFor:
+          type: string
+        timezone:
+          type: string
+        status:
+          type: string
+        recurring:
+          type: boolean
+        recurrenceRule:
+          type: ["string", "null"]
+        campaign:
+          type: ["string", "null"]
+      required:
+        - id
+        - contentId
+        - title
+        - platform
+        - scheduledFor
+        - timezone
+        - status
+        - recurring
+
+    ScheduledPostUpdate:
+      type: object
+      properties:
+        scheduledFor:
+          type: string
+        timezone:
+          type: string
+        recurring:
+          type: boolean
+        recurrenceRule:
+          type: ["string", "null"]
+
+    PlatformList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlatformConnection"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlatformGroup"
+      required:
+        - items
+        - groups
+
+    PlatformConnection:
+      type: object
+      properties:
+        id:
+          type: string
+        platform:
+          type: string
+        connected:
+          type: boolean
+        profile:
+          type: ["string", "null"]
+        permissions:
+          type: array
+          items:
+            type: string
+        lastSync:
+          type: ["string", "null"]
+        capabilities:
+          type: array
+          items:
+            type: string
+        tokenExpiresAt:
+          type: ["string", "null"]
+        status:
+          type: string
+      required:
+        - id
+        - platform
+        - connected
+        - permissions
+        - capabilities
+        - status
+
+    PlatformConnectionInput:
+      type: object
+      properties:
+        platform:
+          type: string
+        profile:
+          type: string
+      required:
+        - platform
+
+    PlatformGroup:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        platforms:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - platforms
+
+    CampaignList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Campaign"
+      required:
+        - items
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        goal:
+          type: string
+        progress:
+          type: integer
+        startDate:
+          type: string
+        endDate:
+          type: string
+        platforms:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - type
+        - status
+        - goal
+        - progress
+        - startDate
+        - endDate
+        - platforms
+
+    ApprovalList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApprovalRecord"
+      required:
+        - items
+
+    ApprovalRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        contentId:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+        reviewer:
+          type: string
+        note:
+          type: ["string", "null"]
+        deadline:
+          type: ["string", "null"]
+        timestamp:
+          type: string
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApprovalComment"
+      required:
+        - id
+        - contentId
+        - title
+        - status
+        - reviewer
+        - timestamp
+
+    ApprovalComment:
+      type: object
+      properties:
+        id:
+          type: string
+        author:
+          type: string
+        text:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - id
+        - author
+        - text
+        - timestamp
+
+    ApprovalActionInput:
+      type: object
+      properties:
+        note:
+          type: string
+      required:
+        - note
+
+    PublishingHistoryList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublishingHistoryEntry"
+      required:
+        - items
+
+    PublishingHistoryEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        contentId:
+          type: string
+        title:
+          type: string
+        platform:
+          type: string
+        status:
+          type: string
+        publishedAt:
+          type: ["string", "null"]
+        campaign:
+          type: ["string", "null"]
+        error:
+          type: ["string", "null"]
+        user:
+          type: string
+      required:
+        - id
+        - contentId
+        - title
+        - platform
+        - status
+        - user
+
+    NotificationList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+        unreadCount:
+          type: integer
+      required:
+        - items
+        - unreadCount
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+        category:
+          type: string
+        timestamp:
+          type: string
+        read:
+          type: boolean
+        action:
+          type: ["object", "null"]
+          properties:
+            label:
+              type: string
+            href:
+              type: string
+          required:
+            - label
+            - href
+      required:
+        - id
+        - title
+        - message
+        - severity
+        - category
+        - timestamp
+        - read
+
+    NotificationReadInput:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+      required:
+        - ids
