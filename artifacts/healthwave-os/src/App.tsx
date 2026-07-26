@@ -31,6 +31,9 @@ import AIAgents from './pages/AIAgents';
 import PublishingDashboard from './pages/PublishingDashboard';
 import PublishingRules from './pages/PublishingRules';
 import PlatformGroups from './pages/PlatformGroups';
+import AISettings from './pages/AISettings';
+import AIContentWorkspace from './pages/AIContentWorkspace';
+import SpecialtyProfiles from './pages/SpecialtyProfiles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -65,6 +68,9 @@ function Router() {
         <Route path="/publishing-dashboard" component={PublishingDashboard} />
         <Route path="/publishing-rules" component={PublishingRules} />
         <Route path="/platform-groups" component={PlatformGroups} />
+        <Route path="/ai-settings" component={AISettings} />
+        <Route path="/ai-workspace" component={AIContentWorkspace} />
+        <Route path="/specialties" component={SpecialtyProfiles} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

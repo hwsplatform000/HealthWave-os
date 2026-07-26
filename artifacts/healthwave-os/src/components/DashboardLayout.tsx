@@ -25,6 +25,9 @@ import {
   Bot,
   Send,
   GitBranch,
+  Zap,
+  Wand2,
+  Layers,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -54,6 +57,10 @@ const navItems = [
   { icon: Send, label: 'Publishing Dashboard', href: '/publishing-dashboard' },
   { icon: Shield, label: 'Publishing Rules', href: '/publishing-rules' },
   { icon: GitBranch, label: 'Platform Groups', href: '/platform-groups' },
+  { icon: Zap, label: 'AI Settings', href: '/ai-settings' },
+  { icon: Sparkles, label: 'AI Workspace', href: '/ai-workspace' },
+  { icon: Wand2, label: 'Prompt Library', href: '/prompt-library' },
+  { icon: Layers, label: 'Specialties', href: '/specialties' },
   { icon: Settings, label: 'Settings', href: '/settings' },
 ];
 

@@ -8,3 +8,8 @@ export * from "./scheduledPosts";
 export * from "./publishingHistory";
 export * from "./platformGroups";
 export * from "./publishingRules";
+export * from "./aiSettings";
+export * from "./brandVoices";
+export * from "./prompts";
+export * from "./styleReferences";
+export * from "./specialties";

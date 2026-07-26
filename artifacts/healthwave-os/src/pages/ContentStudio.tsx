@@ -29,9 +29,11 @@ export default function ContentStudio() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2">
-            <Sparkles className="h-4 w-4" />
-            AI Draft
+          <Button asChild variant="outline" className="gap-2">
+            <Link href="/ai-workspace">
+              <Sparkles className="h-4 w-4" />
+              AI Workspace
+            </Link>
           </Button>
           <Button className="gap-2">
             <Plus className="h-4 w-4" />
