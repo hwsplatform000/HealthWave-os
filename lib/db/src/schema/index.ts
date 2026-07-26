@@ -6,3 +6,5 @@ export * from "./notifications";
 export * from "./publishingQueue";
 export * from "./scheduledPosts";
 export * from "./publishingHistory";
+export * from "./platformGroups";
+export * from "./publishingRules";

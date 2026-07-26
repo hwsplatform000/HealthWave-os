@@ -19,6 +19,10 @@ import {
   Send,
   Sparkles,
   TrendingUp,
+  ShieldAlert,
+  Wifi,
+  History,
+  LayoutGrid,
 } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -32,16 +36,24 @@ export default function Dashboard() {
       title: "Today's Posts",
       value: summary?.todayPosts || 0,
       icon: Send,
-      trend: "+2 from yesterday",
+      trend: "Active schedule",
       trendUp: true,
       color: "text-hw-green",
     },
     {
-      title: "Scheduled Queue",
-      value: summary?.queueSize || 0,
-      icon: Clock,
-      trend: "Next 7 days",
-      trendUp: true,
+      title: "Failed Posts",
+      value: summary?.failedPosts || 0,
+      icon: ShieldAlert,
+      trend: "Action required",
+      trendUp: false,
+      color: "text-hw-red",
+    },
+    {
+      title: "Platform Health",
+      value: `${summary?.connectedPlatforms || 0}/${summary?.totalPlatforms || 0}`,
+      icon: Wifi,
+      trend: "Connection status",
+      trendUp: (summary?.connectedPlatforms || 0) === (summary?.totalPlatforms || 0),
       color: "text-hw-cyan",
     },
     {
@@ -51,14 +63,6 @@ export default function Dashboard() {
       trend: "Needs attention",
       trendUp: false,
       color: "text-hw-yellow",
-    },
-    {
-      title: "Drafts in Progress",
-      value: summary?.draftCount || mockDrafts.length,
-      icon: FileText,
-      trend: "Active this week",
-      trendUp: true,
-      color: "text-muted-foreground",
     },
   ];
 
@@ -197,27 +201,44 @@ export default function Dashboard() {
 
         {/* Right Column */}
         <div className="flex flex-col space-y-6">
-          {/* Action Needed */}
+          {/* Quick Publish */}
           <Card>
             <CardHeader>
-              <CardTitle>Action Needed</CardTitle>
-              <CardDescription>Items requiring your approval</CardDescription>
+              <CardTitle className="text-sm font-semibold">Quick Publish</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-2">
+              <Button variant="outline" size="sm" className="h-20 flex-col gap-2">
+                <FileText className="h-5 w-5" />
+                <span>Text Post</span>
+              </Button>
+              <Button variant="outline" size="sm" className="h-20 flex-col gap-2">
+                <LayoutGrid className="h-5 w-5" />
+                <span>Media Post</span>
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Action Needed */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-semibold">Action Needed</CardTitle>
+              <Button asChild variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                <Link href="/compliance">View All</Link>
+              </Button>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {mockDrafts.filter(d => d.status === 'compliance_review').map((draft) => (
-                  <div key={draft.id} className="flex flex-col gap-2 rounded-lg border p-3">
+              <div className="space-y-3">
+                {mockDrafts.filter(d => d.status === 'compliance_review').slice(0, 2).map((draft) => (
+                  <div key={draft.id} className="flex flex-col gap-2 rounded-lg border p-3 bg-card/50">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-destructive">Compliance Flag</span>
-                      <span className="text-xs text-muted-foreground">2 hours ago</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-hw-red">Compliance Flag</span>
+                      <span className="text-[10px] text-muted-foreground">2h ago</span>
                     </div>
-                    <p className="text-sm font-medium line-clamp-1">{draft.title}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <PlatformIcon platform={draft.platform[0]} className="h-4 w-4" />
-                      <Button asChild variant="outline" size="sm" className="h-7 text-xs">
-                        <Link href={`/compliance`}>
-                          Review
-                        </Link>
+                    <p className="text-xs font-medium line-clamp-1">{draft.title}</p>
+                    <div className="flex items-center justify-between mt-1">
+                      <PlatformIcon platform={draft.platform[0]} className="h-3.5 w-3.5" />
+                      <Button asChild variant="secondary" size="sm" className="h-6 px-2 text-[10px]">
+                        <Link href={`/compliance`}>Review</Link>
                       </Button>
                     </div>
                   </div>
@@ -228,32 +249,34 @@ export default function Dashboard() {
 
           {/* Recent Activity */}
           <Card className="flex-1">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-semibold">Recent Activity</CardTitle>
+              <Button asChild variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                <Link href="/publishing-history"><History className="h-3 w-3 mr-1" /> History</Link>
+              </Button>
             </CardHeader>
             <CardContent>
-              <ScrollArea className="h-[250px] pr-4">
+              <ScrollArea className="h-[200px] pr-4">
                 {loadingActivity ? (
-                  <div className="text-center text-sm text-muted-foreground">Loading...</div>
+                  <div className="text-center text-xs text-muted-foreground py-4">Loading...</div>
                 ) : activityData?.items.length === 0 ? (
-                  <div className="text-center text-sm text-muted-foreground">No recent activity</div>
+                  <div className="text-center text-xs text-muted-foreground py-4">No recent activity</div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {activityData?.items.map((event, i) => (
-                      <div key={event.id} className="relative flex gap-4">
-                        {/* Timeline line */}
+                      <div key={event.id} className="relative flex gap-3">
                         {i !== activityData.items.length - 1 && (
-                          <div className="absolute left-[11px] top-6 h-full w-px bg-border" />
+                          <div className="absolute left-[9px] top-5 h-full w-px bg-border" />
                         )}
-                        <div className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary">
-                          <Activity className="h-3 w-3 text-muted-foreground" />
+                        <div className={`relative z-10 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${event.severity === 'critical' ? 'bg-hw-red/20' : 'bg-secondary'}`}>
+                          {event.severity === 'critical' ? <ShieldAlert className="h-2.5 w-2.5 text-hw-red" /> : <Activity className="h-2.5 w-2.5 text-muted-foreground" />}
                         </div>
-                        <div className="flex flex-col gap-1 pb-1">
-                          <p className="text-sm">
-                            <span className="font-medium">{event.user || 'System'}</span>{' '}
+                        <div className="flex flex-col gap-0.5 pb-3">
+                          <p className="text-xs">
+                            <span className="font-semibold">{event.user || 'System'}</span>{' '}
                             <span className="text-muted-foreground">{event.title}</span>
                           </p>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-[10px] text-muted-foreground">
                             {format(parseISO(event.timestamp), 'MMM d, h:mm a')}
                           </span>
                         </div>

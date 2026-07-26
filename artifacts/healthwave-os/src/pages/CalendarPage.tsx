@@ -6,7 +6,21 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { StatusBadge } from '@/components/StatusBadge';
 import { PlatformIcon } from '@/components/PlatformIcon';
-import { format, parseISO, addDays, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay } from 'date-fns';
+import { 
+  format, 
+  parseISO, 
+  addDays, 
+  startOfWeek, 
+  endOfWeek, 
+  eachDayOfInterval, 
+  isSameDay, 
+  startOfMonth, 
+  endOfMonth, 
+  isSameMonth,
+  addMonths,
+  subMonths,
+  subDays
+} from 'date-fns';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Filter, Plus } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -15,19 +29,32 @@ export default function CalendarPage() {
   const [view, setView] = useState<'week' | 'month'>('week');
   const [platformFilter, setPlatformFilter] = useState<string>('all');
   
-  const weekStart = startOfWeek(currentDate);
-  const weekEnd = endOfWeek(currentDate);
-  const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
+  const calendarStart = view === 'week' ? startOfWeek(currentDate) : startOfWeek(startOfMonth(currentDate));
+  const calendarEnd = view === 'week' ? endOfWeek(currentDate) : endOfWeek(endOfMonth(currentDate));
+  const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
   const { data: postsData, isLoading: postsLoading } = useGetScheduledPosts({
-    start: weekStart.toISOString(),
-    end: weekEnd.toISOString()
+    start: calendarStart.toISOString(),
+    end: calendarEnd.toISOString()
   });
 
   const { data: campaignsData } = useListCampaigns();
 
-  const handlePrev = () => setCurrentDate(prev => addDays(prev, view === 'week' ? -7 : -30));
-  const handleNext = () => setCurrentDate(prev => addDays(prev, view === 'week' ? 7 : 30));
+  const handlePrev = () => {
+    if (view === 'week') {
+      setCurrentDate(prev => subDays(prev, 7));
+    } else {
+      setCurrentDate(prev => subMonths(prev, 1));
+    }
+  };
+
+  const handleNext = () => {
+    if (view === 'week') {
+      setCurrentDate(prev => addDays(prev, 7));
+    } else {
+      setCurrentDate(prev => addMonths(prev, 1));
+    }
+  };
 
   return (
     <div className="flex h-full flex-col space-y-6 p-6">
@@ -52,8 +79,6 @@ export default function CalendarPage() {
               variant={view === 'month' ? 'secondary' : 'ghost'} 
               size="sm" 
               onClick={() => setView('month')}
-              disabled
-              title="Month view coming soon"
             >
               Month
             </Button>
@@ -88,7 +113,11 @@ export default function CalendarPage() {
         <div className="flex items-center justify-between border-b border-sidebar-border p-4 bg-background/50">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <CalendarIcon className="h-5 w-5 text-primary" />
-            {format(weekStart, 'MMMM d')} - {format(weekEnd, 'MMMM d, yyyy')}
+            {view === 'week' ? (
+              `${format(calendarStart, 'MMMM d')} - ${format(calendarEnd, 'MMMM d, yyyy')}`
+            ) : (
+              format(currentDate, 'MMMM yyyy')
+            )}
           </h2>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" onClick={handlePrev}>
@@ -104,46 +133,50 @@ export default function CalendarPage() {
         </div>
 
         <ScrollArea className="flex-1">
-          <div className="grid grid-cols-7 min-w-[800px] h-full divide-x divide-sidebar-border border-b border-sidebar-border bg-background">
+          <div className={`grid grid-cols-7 min-w-[800px] divide-x divide-sidebar-border border-b border-sidebar-border bg-background ${view === 'month' ? 'auto-rows-fr min-h-[600px]' : 'h-full'}`}>
             {/* Day Headers */}
+            {days.slice(0, 7).map((day) => (
+              <div key={`header-${day.toString()}`} className="p-3 text-center border-b border-sidebar-border bg-muted/20">
+                <p className="text-xs font-bold text-muted-foreground uppercase">{format(day, 'EEE')}</p>
+              </div>
+            ))}
+
+            {/* Calendar Days */}
             {days.map((day) => {
               const isToday = isSameDay(day, new Date());
+              const isCurrentMonth = isSameMonth(day, currentDate);
+              
               return (
-                <div key={day.toString()} className="flex flex-col">
-                  <div className={`p-3 text-center border-b border-sidebar-border ${isToday ? 'bg-primary/10' : ''}`}>
-                    <p className="text-xs font-medium text-muted-foreground uppercase">{format(day, 'EEE')}</p>
-                    <p className={`text-2xl mt-1 ${isToday ? 'font-bold text-primary' : 'font-medium'}`}>
+                <div 
+                  key={day.toString()} 
+                  className={`flex flex-col min-h-[120px] ${!isCurrentMonth && view === 'month' ? 'bg-muted/5 opacity-50' : 'bg-background'} ${isToday ? 'ring-1 ring-inset ring-primary/30 bg-primary/5' : ''}`}
+                >
+                  <div className="p-2 flex justify-between items-start">
+                    <span className={`text-sm ${isToday ? 'font-bold text-primary' : 'font-medium text-muted-foreground'}`}>
                       {format(day, 'd')}
-                    </p>
+                    </span>
                   </div>
-                  <div className="flex-1 p-2 min-h-[400px] bg-sidebar/30">
+                  <div className="flex-1 p-1 space-y-1 overflow-y-auto max-h-[150px]">
                     {postsLoading ? (
-                      <div className="h-20 bg-muted/20 animate-pulse rounded-md mt-2" />
+                      <div className="h-4 bg-muted/20 animate-pulse rounded-sm" />
                     ) : (
-                      <div className="space-y-2 mt-1">
-                        {postsData?.items
-                          ?.filter((post) => isSameDay(parseISO(post.scheduledFor), day))
-                          ?.filter((post) => platformFilter === 'all' || post.platform.toLowerCase() === platformFilter)
-                          ?.map((post) => (
-                            <div 
-                              key={post.id} 
-                              className="group relative flex flex-col gap-1.5 rounded-md border border-sidebar-border bg-card p-2 text-sm shadow-sm hover:border-primary/50 transition-colors"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-semibold text-xs text-muted-foreground">
-                                  {format(parseISO(post.scheduledFor), 'h:mm a')}
-                                </span>
-                                <PlatformIcon platform={post.platform} className="h-3 w-3" />
-                              </div>
-                              <p className="font-medium leading-snug line-clamp-2" title={post.title}>{post.title}</p>
-                              {post.campaign && (
-                                <p className="text-[10px] text-muted-foreground truncate">
-                                  {campaignsData?.items.find(c => c.id === post.campaign)?.name || post.campaign}
-                                </p>
-                              )}
+                      postsData?.items
+                        ?.filter((post) => isSameDay(parseISO(post.scheduledFor), day))
+                        ?.filter((post) => platformFilter === 'all' || post.platform.toLowerCase() === platformFilter)
+                        ?.map((post) => (
+                          <div 
+                            key={post.id} 
+                            className="group relative flex flex-col gap-0.5 rounded border border-sidebar-border bg-card px-1.5 py-1 text-[10px] shadow-sm hover:border-primary/50 transition-colors cursor-pointer"
+                          >
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="font-semibold text-muted-foreground truncate">
+                                {format(parseISO(post.scheduledFor), 'h:mm a')}
+                              </span>
+                              <PlatformIcon platform={post.platform} className="h-2.5 w-2.5 shrink-0" />
                             </div>
-                          ))}
-                      </div>
+                            <p className="font-medium leading-tight line-clamp-1" title={post.title}>{post.title}</p>
+                          </div>
+                        ))
                     )}
                   </div>
                 </div>

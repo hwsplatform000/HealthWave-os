@@ -23,6 +23,8 @@ import {
   Image,
   Puzzle,
   Bot,
+  Send,
+  GitBranch,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -49,6 +51,9 @@ const navItems = [
   { icon: Image, label: 'Media Library', href: '/media-library' },
   { icon: Puzzle, label: 'Integrations', href: '/integrations' },
   { icon: Bot, label: 'AI Agents', href: '/ai-agents' },
+  { icon: Send, label: 'Publishing Dashboard', href: '/publishing-dashboard' },
+  { icon: Shield, label: 'Publishing Rules', href: '/publishing-rules' },
+  { icon: GitBranch, label: 'Platform Groups', href: '/platform-groups' },
   { icon: Settings, label: 'Settings', href: '/settings' },
 ];
 

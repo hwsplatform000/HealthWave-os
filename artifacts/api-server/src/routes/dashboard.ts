@@ -21,11 +21,12 @@ router.get("/dashboard", async (_req, res, next) => {
   try {
     const today = new Date();
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
     const [contentCounts] = await db
       .select({
         total: count(),
-        scheduledToday: sql<number>`count(*) filter (where ${contentItemsTable.scheduledFor} >= ${todayStart.toISOString()} and ${contentItemsTable.scheduledFor} < ${todayStart.toISOString()})`,
+        scheduledToday: sql<number>`count(*) filter (where ${contentItemsTable.scheduledFor} >= ${todayStart.toISOString()} and ${contentItemsTable.scheduledFor} < ${todayEnd.toISOString()})`,
         draftCount: sql<number>`count(*) filter (where ${contentItemsTable.status} = 'draft')`,
       })
       .from(contentItemsTable);

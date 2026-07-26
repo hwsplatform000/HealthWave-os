@@ -28,6 +28,9 @@ import MediaLibrary from './pages/MediaLibrary';
 import Settings from './pages/Settings';
 import Integrations from './pages/Integrations';
 import AIAgents from './pages/AIAgents';
+import PublishingDashboard from './pages/PublishingDashboard';
+import PublishingRules from './pages/PublishingRules';
+import PlatformGroups from './pages/PlatformGroups';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -59,6 +62,9 @@ function Router() {
         <Route path="/settings" component={Settings} />
         <Route path="/integrations" component={Integrations} />
         <Route path="/ai-agents" component={AIAgents} />
+        <Route path="/publishing-dashboard" component={PublishingDashboard} />
+        <Route path="/publishing-rules" component={PublishingRules} />
+        <Route path="/platform-groups" component={PlatformGroups} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
