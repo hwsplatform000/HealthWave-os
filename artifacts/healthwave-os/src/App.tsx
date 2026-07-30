@@ -34,6 +34,13 @@ import PlatformGroups from './pages/PlatformGroups';
 import AISettings from './pages/AISettings';
 import AIContentWorkspace from './pages/AIContentWorkspace';
 import SpecialtyProfiles from './pages/SpecialtyProfiles';
+import TrendCenter from './pages/TrendCenter';
+import Competitors from './pages/Competitors';
+import ContentIntelligence from './pages/ContentIntelligence';
+import ContentPillarsPage from './pages/ContentPillarsPage';
+import AIWorkflows from './pages/AIWorkflows';
+import KnowledgeLibrary from './pages/KnowledgeLibrary';
+import WebsiteAudit from './pages/WebsiteAudit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -71,6 +78,13 @@ function Router() {
         <Route path="/ai-settings" component={AISettings} />
         <Route path="/ai-workspace" component={AIContentWorkspace} />
         <Route path="/specialties" component={SpecialtyProfiles} />
+        <Route path="/trend-center" component={TrendCenter} />
+        <Route path="/competitors" component={Competitors} />
+        <Route path="/content-intelligence" component={ContentIntelligence} />
+        <Route path="/content-pillars" component={ContentPillarsPage} />
+        <Route path="/ai-workflows" component={AIWorkflows} />
+        <Route path="/knowledge-library" component={KnowledgeLibrary} />
+        <Route path="/website-audit" component={WebsiteAudit} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

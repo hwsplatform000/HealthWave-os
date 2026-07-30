@@ -61,6 +61,13 @@ const navItems = [
   { icon: Sparkles, label: 'AI Workspace', href: '/ai-workspace' },
   { icon: Wand2, label: 'Prompt Library', href: '/prompt-library' },
   { icon: Layers, label: 'Specialties', href: '/specialties' },
+  { icon: TrendingUp, label: 'Trend Center', href: '/trend-center' },
+  { icon: Users, label: 'Competitors', href: '/competitors' },
+  { icon: Search, label: 'Content Intelligence', href: '/content-intelligence' },
+  { icon: LayoutDashboard, label: 'Content Pillars', href: '/content-pillars' },
+  { icon: GitBranch, label: 'AI Workflows', href: '/ai-workflows' },
+  { icon: BookOpen, label: 'Knowledge Library', href: '/knowledge-library' },
+  { icon: Search, label: 'Website Audit', href: '/website-audit' },
   { icon: Settings, label: 'Settings', href: '/settings' },
 ];
 
